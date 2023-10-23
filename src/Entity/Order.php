@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\OrderStatus;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,8 +38,8 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $totalPrice = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $state = null;
+    #[ORM\Column(type: 'string', enumType: OrderStatus::class)]
+    private ?OrderStatus $state = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -148,9 +149,9 @@ class Order
         return $this->state;
     }
 
-    public function setState(string $state): static
+    public function setState(OrderStatus $OrderStatus): static
     {
-        $this->state = $state;
+        $this->state = $OrderStatus;
 
         return $this;
     }

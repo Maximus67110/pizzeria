@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="text-center mt-4">
+            <h1>Pizza List</h1>
+        </div>
+        <div class="row mt-5 mb-4 mt-4">
+            {% for pizza in pizzas %}
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <a>
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ asset('uploads/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ pizza.name }}</h5>
+                                <div class="card-text">{{ (pizza.price/100)| format_currency('EUR',locale="fr")}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

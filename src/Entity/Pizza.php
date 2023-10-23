@@ -30,6 +30,9 @@ class Pizza
     #[ORM\ManyToMany(targetEntity: Ingredient::class, mappedBy: 'pizza')]
     private Collection $ingredients;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->orderLine = new ArrayCollection();
@@ -130,6 +133,18 @@ class Pizza
         if ($this->ingredients->removeElement($ingredient)) {
             $ingredient->removePizza($this);
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
