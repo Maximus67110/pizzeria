@@ -22,6 +22,9 @@ class OrderLine
     #[ORM\ManyToOne(inversedBy: 'orderLines')]
     private ?Order $order_associative = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orderLine')]
+    private ?Pizza $pizza = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class OrderLine
     public function setOrderAssociative(?Order $order_associative): static
     {
         $this->order_associative = $order_associative;
+
+        return $this;
+    }
+
+    public function getPizza(): ?Pizza
+    {
+        return $this->pizza;
+    }
+
+    public function setPizza(?Pizza $pizza): static
+    {
+        $this->pizza = $pizza;
 
         return $this;
     }
