@@ -27,9 +27,13 @@ class Pizza
     #[ORM\OneToMany(mappedBy: 'pizza', targetEntity: OrderLine::class)]
     private Collection $orderLine;
 
+    #[ORM\ManyToMany(targetEntity: Ingredient::class, mappedBy: 'pizza')]
+    private Collection $ingredients;
+
     public function __construct()
     {
         $this->orderLine = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +102,33 @@ class Pizza
             if ($orderLine->getPizza() === $this) {
                 $orderLine->setPizza(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getIngredients(): Collection
+    {
+        return $this->ingredients;
+    }
+
+    public function addIngredient(Ingredient $ingredient): static
+    {
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients->add($ingredient);
+            $ingredient->addPizza($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIngredient(Ingredient $ingredient): static
+    {
+        if ($this->ingredients->removeElement($ingredient)) {
+            $ingredient->removePizza($this);
         }
 
         return $this;
