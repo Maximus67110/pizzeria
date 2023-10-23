@@ -18,9 +18,6 @@ class Ingredient
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?int $quantity = null;
-
     #[ORM\ManyToMany(targetEntity: Pizza::class, inversedBy: 'ingredients')]
     private Collection $pizza;
 
@@ -42,18 +39,6 @@ class Ingredient
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): static
-    {
-        $this->quantity = $quantity;
 
         return $this;
     }

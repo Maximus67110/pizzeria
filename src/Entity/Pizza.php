@@ -22,7 +22,7 @@ class Pizza
     private ?int $price = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $size = null;
+    private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'pizza', targetEntity: OrderLine::class)]
     private Collection $orderLine;
@@ -65,14 +65,14 @@ class Pizza
         return $this;
     }
 
-    public function getSize(): ?string
+    public function getDescription(): ?string
     {
-        return $this->size;
+        return $this->description;
     }
 
-    public function setSize(string $size): static
+    public function setDescription(string $description): static
     {
-        $this->size = $size;
+        $this->description = $description;
 
         return $this;
     }
