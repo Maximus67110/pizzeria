@@ -15,7 +15,19 @@
                             <img src="{{ asset('uploads/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ pizza.name }}</h5>
-                                <div class="card-text">{{ (pizza.price/100)| format_currency('EUR',locale="fr")}}</div>
+                                <div class="card-text">
+                                    <p>{{ (pizza.price/100)| format_currency('EUR',locale="fr") }}</p>
+                                    <form method="post" action="{{ path('app_add_cart') }}" class="row">
+                                        <div class="col input-group">
+                                            <span class="input-group-text" id="basic-addon1">x</span>
+                                            <input type="number" class="form-control" id="quantity" name="quantity">
+                                            <input type="hidden" class="form-control" id="productId" name="productId" value="{{ pizza.id }}">
+                                        </div>
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-success">Add to cart</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </a>
