@@ -3,34 +3,58 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container" {{ stimulus_controller('home') }}>
         <div class="text-center mt-4">
             <h1>Pizza List</h1>
+        </div>
+        <div class="container-fluid py-5">
+            <form action="{{ path("app_home") }}" class="row g-3">
+                <div class="col-md-2">
+                    {% set default_value = app.request.query.get('order') %}
+                    <label for="order" class="form-label">Filter</label>
+                    <select id="order" name="order">
+                        <option value="price_asc" {% if default_value == "price_asc" %} selected {% endif %}>Prix croissant</option>
+                        <option value="price_desc" {% if default_value == "price_desc" %} selected {% endif %}>Prix décroissant</option>
+                        <option value="name_asc" {% if default_value == "name_asc" %} selected {% endif %}>Alphabétique A → Z</option>
+                        <option value="name_desc" {% if default_value == "name_desc" %} selected {% endif %}>Alphabétique Z → A</option>
+                    </select>
+                </div>
+                <div class="col-2 d-flex">
+                    <button type="submit" class="mt-auto btn btn-dark">Search</button>
+                </div>
+            </form>
         </div>
         <div class="row mt-5 mb-4 mt-4">
             {% for pizza in pizzas %}
                 <div class="col-md-6 col-lg-3 mb-3">
-                    <a>
-                        <div class="card" style="width: 18rem;">
-                            <img src="{{ asset('uploads/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ pizza.name }}</h5>
-                                <div class="card-text">
-                                    <p>{{ (pizza.price/100)| format_currency('EUR',locale="fr") }}</p>
-                                    <form method="post" action="{{ path('app_add_cart') }}" class="row">
-                                        <div class="col input-group">
-                                            <span class="input-group-text" id="basic-addon1">x</span>
-                                            <input type="number" class="form-control" id="quantity" name="quantity">
-                                            <input type="hidden" class="form-control" id="productId" name="productId" value="{{ pizza.id }}">
+                    <div class="card" style="width: 18rem;">
+                        <img src="{{ asset('uploads/' ~ pizza.image) }}" class="card-img-top" alt="{{ pizza.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pizza.name }}</h5>
+                            <div class="card-text">
+                                <p>{{ (pizza.price/100)| format_currency('EUR',locale="fr") }}</p>
+                                {% if app.session.get('cart')[pizza.id] is not defined %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1">
                                         </div>
                                         <div class="col">
-                                            <button type="submit" class="btn btn-success">Add to cart</button>
+                                            <a class="btn btn-success" id="addCart" data-product="{{ pizza.id }}">Add to cart</a>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ app.session.get('cart')[pizza.id] }}">
+                                        </div>
+                                        <div class="col">
+                                            <a class="btn btn-success" id="addCart" data-product="{{ pizza.id }}">Update</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             {% endfor %}
         </div>
