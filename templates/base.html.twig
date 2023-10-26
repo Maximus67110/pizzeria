@@ -15,6 +15,7 @@
     </head>
     <body>
         {{ render(controller('App\\Controller\\HomeController::header')) }}
+        {% include '_flash.html.twig' %}
         {% block body %}{% endblock %}
     </body>
 </html>
