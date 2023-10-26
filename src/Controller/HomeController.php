@@ -26,17 +26,13 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(Request $request, PizzaRepository $pizzaRepository): Response
     {
-        $allowed_filter = ['price', 'name'];
-        $allowed_filter_order = ['asc', 'desc'];
+        $minPrice = $request->get('minPrice');
+        $maxPrice = $request->get('maxPrice');
         $order = explode('_', $request->get('order'));
-        if (isset($order[0], $order[1])) {
-            if (!in_array($order[0], $allowed_filter) || !in_array($order[1], $allowed_filter_order)) {
-                return new Response('I\'m a teapot', 418);
-            }
-            $pizzas = $pizzaRepository->findBy([], [$order[0] => $order[1]]);
-        } else {
-            $pizzas = $pizzaRepository->findAll();
+        if (isset($order[0], $order[1]) && (!in_array($order[0], ['price', 'name']) || !in_array($order[1], ['asc', 'desc']))) {
+            return new Response('I\'m a teapot', 418);
         }
+        $pizzas = $pizzaRepository->search($minPrice, $maxPrice, $order[0] ?? null, $order[1] ?? null);
         return $this->render('home/index.html.twig', [
             'pizzas' => $pizzas,
         ]);

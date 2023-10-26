@@ -9,6 +9,18 @@
         </div>
         <div class="container-fluid py-5">
             <form action="{{ path("app_home") }}" class="row g-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        {% set minPrice = app.request.query.get('minPrice')|default('0') %}
+                        <label for="minPrice" class="form-label">Min Price</label>
+                        <input type="number" class="form-control" id="minPrice" name="minPrice" min="0" value="{{ minPrice }}">
+                    </div>
+                    <div class="col-md-2">
+                        {% set maxPrice = app.request.query.get('maxPrice')|default('100') %}
+                        <label for="maxPrice" class="form-label">Max Price</label>
+                        <input type="number" class="form-control" id="maxPrice" name="maxPrice" max="100" value="{{ maxPrice }}">
+                    </div>
+                </div>
                 <div class="col-md-2">
                     {% set default_value = app.request.query.get('order') %}
                     <label for="order" class="form-label">Filter</label>

@@ -21,6 +21,33 @@ class PizzaRepository extends ServiceEntityRepository
         parent::__construct($registry, Pizza::class);
     }
 
+    public function search(int $minPrice = null, int $maxPrice = null, string $order = null, string $orderBy = null): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        if (isset($minPrice)) {
+            $qb
+                ->andWhere(':minPrice < p.price')
+                ->setParameter('minPrice', $minPrice * 100);
+        }
+
+        if (isset($maxPrice)) {
+            $qb
+                ->andWhere(':maxPrice > p.price')
+                ->setParameter('maxPrice', $maxPrice * 100);
+        }
+
+        if (isset($order, $orderBy)) {
+            $qb
+                ->orderBy('p.'.$order, $orderBy);
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Pizza[] Returns an array of Pizza objects
 //     */
