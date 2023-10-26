@@ -28,23 +28,24 @@ class OrderController extends AbstractController
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $total = $this->cartService->total();
-            $order->setTotalPrice($total);
-            $order->setState(OrderStatus::PENDING);
-            $order->setCreatedAt(new \DateTimeImmutable());
-            $order->setUpdatedAt(new \DateTimeImmutable());
             $cart = $this->cartService->list();
-            foreach ($cart as $product) {
-                $pizza = $pizzaRepository->findOneBy(['id' => $product['id']]);
+            $total = 0;
+            foreach ($cart as $id => $quantity) {
+                $pizza = $pizzaRepository->findOneBy(['id' => $id]);
                 if (!$pizza) {
                     continue;
                 }
                 $orderLine = new OrderLine();
                 $orderLine->setPizza($pizza);
-                $orderLine->setQuantity($product['quantity']);
-                $orderLine->setCapturedPrice($product['quantity'] * $pizza->getPrice());
+                $orderLine->setQuantity($quantity);
+                $total += $capturedPrice = $quantity * $pizza->getPrice();
+                $orderLine->setCapturedPrice($capturedPrice);
                 $order->addOrderLine($orderLine);
             }
+            $order->setTotalPrice($total);
+            $order->setState(OrderStatus::PENDING);
+            $order->setCreatedAt(new \DateTimeImmutable());
+            $order->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($order);
             $entityManager->flush();
             $this->cartService->clearCart();
