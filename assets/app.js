@@ -8,3 +8,4 @@ import './bootstrap.js';
 
 // any CSS you import will output into a single css file (app.css in this case)
 import 'bootstrap/scss/bootstrap.scss';
+import 'nouislider/dist/nouislider.css';

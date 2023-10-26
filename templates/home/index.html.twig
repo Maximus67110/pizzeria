@@ -3,35 +3,28 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-    <div class="container" {{ stimulus_controller('home') }}>
+    {% set min = app.request.query.get('minPrice')|default('0') %}
+    {% set max = app.request.query.get('maxPrice')|default('100') %}
+    <div class="container" {{ stimulus_controller('home') }} data-home-min-value="{{ min }}" data-home-max-value="{{ max }}">
         <div class="text-center mt-4">
             <h1>Pizza List</h1>
         </div>
         <div class="container-fluid py-5">
             <form action="{{ path("app_home") }}" class="row g-3">
-                <div class="row">
-                    <div class="col-md-2">
-                        {% set minPrice = app.request.query.get('minPrice')|default('0') %}
-                        <label for="minPrice" class="form-label">Min Price</label>
-                        <input type="number" class="form-control" id="minPrice" name="minPrice" min="0" value="{{ minPrice }}">
-                    </div>
-                    <div class="col-md-2">
-                        {% set maxPrice = app.request.query.get('maxPrice')|default('100') %}
-                        <label for="maxPrice" class="form-label">Max Price</label>
-                        <input type="number" class="form-control" id="maxPrice" name="maxPrice" max="100" value="{{ maxPrice }}">
-                    </div>
-                </div>
-                <div class="col-md-2">
+                    <div id="slider"></div>
+                <input type="hidden" class="form-control" id="minPrice" name="minPrice" min="0" value="0">
+                <input type="hidden" class="form-control" id="maxPrice" name="maxPrice" max="100" value="100">
+                <div class="mb-3">
                     {% set default_value = app.request.query.get('order') %}
                     <label for="order" class="form-label">Filter</label>
-                    <select id="order" name="order">
+                    <select class="form-select" id="order" name="order">
                         <option value="price_asc" {% if default_value == "price_asc" %} selected {% endif %}>Prix croissant</option>
                         <option value="price_desc" {% if default_value == "price_desc" %} selected {% endif %}>Prix décroissant</option>
                         <option value="name_asc" {% if default_value == "name_asc" %} selected {% endif %}>Alphabétique A → Z</option>
                         <option value="name_desc" {% if default_value == "name_desc" %} selected {% endif %}>Alphabétique Z → A</option>
                     </select>
                 </div>
-                <div class="col-2 d-flex">
+                <div class="d-flex justify-content-center">
                     <button type="submit" class="mt-auto btn btn-dark">Search</button>
                 </div>
             </form>
