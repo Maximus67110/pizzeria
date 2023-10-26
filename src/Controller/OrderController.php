@@ -44,8 +44,6 @@ class OrderController extends AbstractController
             }
             $order->setTotalPrice($total);
             $order->setState(OrderStatus::PENDING);
-            $order->setCreatedAt(new \DateTimeImmutable());
-            $order->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($order);
             $entityManager->flush();
             $this->cartService->clearCart();
