@@ -20,7 +20,7 @@ export default class extends Controller {
                     e.preventDefault();
                     let productId = button.dataset.product;
                     let quantity = button.parentElement.parentElement.firstElementChild.firstElementChild.value;
-                    fetch(`/cart?quantity=${quantity}&productId=${productId}`, {
+                    fetch(`/cart/?quantity=${quantity}&productId=${productId}`, {
                         method: "POST",
                     })
                     .then(response => response.text())
