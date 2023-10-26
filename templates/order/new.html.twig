@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Order{% endblock %}
+
+{% block body %}
+    <div class="container mt-2">
+        <a class="btn btn-outline-secondary" href="{{ path('app_cart_show') }}">Back</a>
+        <div class="text-center mt-4">
+            <h1>Create Order</h1>
+        </div>
+        {{ form(form) }}
+    </div>
+{% endblock %}

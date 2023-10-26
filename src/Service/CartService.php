@@ -57,13 +57,32 @@ class CartService
         return $populatedCart;
     }
 
-    private function setCart(mixed $cart): void
+    public function total(): int
     {
-        $this->session->set('cart', $cart);
+        $cart = $this->getCart();
+        $total = 0;
+        foreach ($cart as $key => $value) {
+            $product = $this->pizzaRepository->findOneBy(['id' => $key]);
+            if (!$product) {
+                continue;
+            }
+            $total += ($value * ($product->getPrice() / 100));
+        }
+        return $total;
     }
 
     private function getCart()
     {
         return $this->session->get('cart', []);
+    }
+
+    private function setCart(mixed $cart): void
+    {
+        $this->session->set('cart', $cart);
+    }
+
+    public function clearCart(): mixed
+    {
+        return $this->session->remove('cart');
     }
 }

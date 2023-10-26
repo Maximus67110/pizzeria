@@ -47,7 +47,7 @@ class Order
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'order_associative', targetEntity: OrderLine::class)]
+    #[ORM\OneToMany(mappedBy: 'order_associative', targetEntity: OrderLine::class, cascade: ['persist'])]
     private Collection $orderLines;
 
     public function __construct()
@@ -144,7 +144,7 @@ class Order
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): ?OrderStatus
     {
         return $this->state;
     }
