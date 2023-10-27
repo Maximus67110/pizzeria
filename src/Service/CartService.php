@@ -71,12 +71,12 @@ class CartService
         return $total;
     }
 
-    private function getCart()
+    public function getCart()
     {
         return $this->session->get('cart', []);
     }
 
-    private function setCart(mixed $cart): void
+    public function setCart(mixed $cart): void
     {
         $this->session->set('cart', $cart);
     }
