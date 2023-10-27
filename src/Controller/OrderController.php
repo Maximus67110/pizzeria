@@ -90,7 +90,9 @@ class OrderController extends AbstractController
         }
         $order->setState(OrderStatus::PAYED);
         $entityManager->flush();
-        return $this->render('order/success.html.twig');
+        return $this->render('order/success.html.twig', [
+            'order' => $order
+        ]);
     }
 
     #[Route('/checkout/error', name: 'app_order_checkout_error', methods: ['GET'])]

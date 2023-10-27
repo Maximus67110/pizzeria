@@ -5,7 +5,38 @@
 {% block body %}
     <div class="container mt-2">
         <div class="text-center mt-4">
-            <h1>Order Success</h1>
+            <h1>Thank you for your order!</h1>
+        </div>
+        {% for orderLine in order.orderLines %}
+            <div class="row row-main my-2">
+                <div class="col-3">
+                    <img class="img-fluid" src="{{ asset('uploads/' ~ orderLine.pizza.image) }}" alt="{{ orderLine.pizza.name }}">
+                </div>
+                <div class="col-6">
+                    <div class="row d-flex">
+                        <b>{{ orderLine.pizza.name }}</b>
+                    </div>
+                    <div class="row d-flex">
+                        <p class="text-muted">
+                            {% for ingredient in orderLine.pizza.ingredients %}
+                                <span>{{ ingredient }}</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-3 d-flex justify-content-between">
+                    <p>{{ (orderLine.pizza.price/100)| format_currency('EUR',locale="fr") }}</p>
+                    <p>Qty:&nbsp;{{ orderLine.quantity }}</p>
+                    <b>{{ ((orderLine.capturedPrice*orderLine.quantity)/100)| format_currency('EUR',locale="fr") }}</b>
+                </div>
+            </div>
+        {% endfor %}
+        <hr>
+        <div class="total">
+            <div class="row">
+                <div class="col">Total&nbsp;:</div>
+                <div class="col d-flex justify-content-end"><b>{{ (order.totalPrice/100)| format_currency('EUR',locale="fr") }}</b></div>
+            </div>
         </div>
     </div>
 {% endblock %}
