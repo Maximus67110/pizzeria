@@ -28,6 +28,8 @@ class OrderController extends AbstractController
     #[Route('/checkout', name: 'app_order_checkout')]
     public function checkout(Request $request, PizzaRepository $pizzaRepository, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
+        $tokenProvider = $this->container->get('security.csrf.token_manager');
+        $token = $tokenProvider->getToken('stripe_token')->getValue();
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
@@ -66,7 +68,7 @@ class OrderController extends AbstractController
             $entityManager->flush();
             $this->cartService->clearCart();
             $session->set('orderNumber', $order->getId());
-            $StripeSession = $this->paymentService->pay($lineItems);
+            $StripeSession = $this->paymentService->pay($lineItems, $token);
             return $this->redirect($StripeSession->url, 303);
         }
         return $this->render('order/new.html.twig', [
@@ -75,8 +77,12 @@ class OrderController extends AbstractController
     }
 
     #[Route('/checkout/success', name: 'app_order_checkout_success', methods: ['GET'])]
-    public function checkoutSuccess(SessionInterface $session, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response
+    public function checkoutSuccess(Request $request, SessionInterface $session, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response
     {
+        $token = $request->get('token');
+        if (!$this->isCsrfTokenValid('stripe_token', $token)) {
+            return new Response('I\'m a teapot', 418);
+        }
         $orderId = $session->get('orderNumber');
         $order = $orderRepository->findOneBy(['id' => $orderId]);
         if (!$order) {

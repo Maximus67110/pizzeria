@@ -17,14 +17,14 @@ class PaymentService
         private UrlGeneratorInterface $router
     ) {}
 
-    public function pay(array $lineItems): Session
+    public function pay(array $lineItems, string $token): Session
     {
         $apiKey = $this->containerBag->get('stripe_secret_key');
         Stripe::setApiKey($apiKey);
         return Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => $this->router->generate('app_order_checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'success_url' => $this->router->generate('app_order_checkout_success', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
             'cancel_url' => $this->router->generate('app_order_checkout_error', [], UrlGeneratorInterface::ABSOLUTE_URL)
         ]);
     }
