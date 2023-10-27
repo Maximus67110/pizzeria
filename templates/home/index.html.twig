@@ -37,6 +37,11 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ pizza.name }}</h5>
                             <div class="card-text">
+                                <p class="text-muted">
+                                    {% for ingredient in pizza.ingredients %}
+                                        <span>{{ ingredient }}</span>
+                                    {% endfor %}
+                                </p>
                                 <p>{{ (pizza.price/100)| format_currency('EUR',locale="fr") }}</p>
                                 {% if app.session.get('cart')[pizza.id] is not defined %}
                                     <div class="row">
